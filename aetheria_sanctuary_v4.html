@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERIA SANCTUARY | Ultra-Luxury 3D & VR Real Estate</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sanctuaryObsidian: '#0B0C0E',
+                        sanctuaryCard: '#141619',
+                        sanctuaryBorder: '#23262B',
+                        champagneGold: '#C5A880',
+                        champagneLight: '#E8D4B4',
+                        travertineCream: '#EFECE6',
+                        sageAccent: '#7A8B78',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0B0C0E; }
+        ::-webkit-scrollbar-thumb { background: #23262B; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C5A880; }
+        .warm-glass {
+            background: rgba(20, 22, 25, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(197, 168, 128, 0.2);
+        }
+        .warm-glass-gold {
+            background: rgba(197, 168, 128, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 168, 128, 0.4);
+        }
+        .gold-glow {
+            box-shadow: 0 0 40px rgba(197, 168, 128, 0.25);
+        }
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #EFECE6 0%, #C5A880 50%, #E8D4B4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-sanctuaryObsidian text-travertineCream font-sans antialiased overflow-x-hidden selection:bg-champagneGold selection:text-sanctuaryObsidian">
+
+    <!-- Background 3D Particle Crystal Torus Canvas -->
+    <div id="canvas-container" class="fixed inset-0 pointer-events-none z-0 opacity-60"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 warm-glass border-b border-sanctuaryBorder transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-10 h-10 rounded-xl warm-glass-gold flex items-center justify-center border border-champagneGold/40 group-hover:rotate-45 transition-transform duration-700">
+                    <i data-lucide="compass" class="w-5 h-5 text-champagneGold"></i>
+                </div>
+                <div>
+                    <span class="font-cinzel text-lg sm:text-xl font-bold tracking-widest gold-text-gradient">AETHERIA</span>
+                    <span class="block text-[9px] tracking-[0.4s] text-sageAccent uppercase font-semibold">Sanctuary Estates</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-wider font-cinzel">
+                <a href="#hero" class="hover:text-champagneGold transition-colors flex items-center gap-1.5 text-champagneGold"><i data-lucide="sparkles" class="w-4 h-4"></i> SANCTUARY</a>
+                <a href="#catalog" class="hover:text-champagneGold transition-colors flex items-center gap-1.5"><i data-lucide="building-2" class="w-4 h-4"></i> PORTFOLIO</a>
+                <a href="#vr-suite" class="hover:text-champagneGold transition-colors flex items-center gap-1.5"><i data-lucide="view" class="w-4 h-4"></i> 360° VR SUITE</a>
+                <a href="#dollhouse" class="hover:text-champagneGold transition-colors flex items-center gap-1.5"><i data-lucide="box" class="w-4 h-4"></i> 3D DOLLHOUSE</a>
+                <a href="#yield" class="hover:text-champagneGold transition-colors flex items-center gap-1.5"><i data-lucide="trending-up" class="w-4 h-4"></i> YIELD OS</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="openWishlistModal()" class="relative p-2.5 rounded-xl warm-glass hover:border-champagneGold transition-all text-travertineCream">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    <span id="wishlist-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-champagneGold text-sanctuaryObsidian rounded-full text-[10px] font-bold flex items-center justify-center hidden">0</span>
+                </button>
+                <button onclick="openInquiryModal('Sanctuary Direct Consultation')" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-champagneGold via-amber-200 to-amber-400 text-sanctuaryObsidian font-bold text-xs tracking-wider font-cinzel shadow-lg gold-glow hover:scale-105 transition-all">
+                    <span>PRIVATE VIEWING</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-20">
+
+        <!-- 1. HERO SECTION WITH 3D PARTICLE CRYSTAL TORUS -->
+        <section id="hero" class="relative min-h-[92vh] flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full warm-glass-gold mb-6 border border-champagneGold/40 animate-pulse">
+                <i data-lucide="crown" class="w-4 h-4 text-champagneGold"></i>
+                <span class="text-xs uppercase tracking-[0.3em] text-champagneGold font-bold font-cinzel">AWWWARDS SITE OF THE YEAR WINNER</span>
+            </div>
+
+            <h1 class="font-cinzel text-4xl sm:text-6xl md:text-8xl font-black max-w-6xl leading-[1.1] mb-6">
+                ORGANIC LUXURY <span class="gold-text-gradient">LIVING SPACES</span>
+            </h1>
+
+            <p class="text-sageAccent text-base sm:text-xl max-w-2xl mb-12 font-light tracking-wide font-sans">
+                Experience architectural masterpieces through Three.js spatial crystals, true 360° VR panoramas, and biophilic design intelligence.
+            </p>
+
+            <!-- Glassmorphic Bento Search Bar -->
+            <div class="w-full max-w-5xl warm-glass p-5 sm:p-7 rounded-3xl shadow-2xl border border-champagneGold/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+                <div class="space-y-1.5 p-3.5 rounded-2xl bg-sanctuaryCard border border-sanctuaryBorder">
+                    <label class="text-[10px] uppercase tracking-widest text-champagneGold font-bold font-cinzel flex items-center gap-1.5">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Sanctuary Location
+                    </label>
+                    <select id="search-city" class="w-full bg-transparent text-sm font-semibold focus:outline-none text-travertineCream cursor-pointer font-cinzel">
+                        <option value="all" class="bg-sanctuaryCard">All Global Sanctuaries</option>
+                        <option value="Malibu" class="bg-sanctuaryCard">Malibu Coastline</option>
+                        <option value="Kyoto" class="bg-sanctuaryCard">Kyoto Zen Bamboo</option>
+                        <option value="SwissAlps" class="bg-sanctuaryCard">Swiss Alpine Chalet</option>
+                        <option value="Provence" class="bg-sanctuaryCard">Provence Lavender Estate</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5 p-3.5 rounded-2xl bg-sanctuaryCard border border-sanctuaryBorder">
+                    <label class="text-[10px] uppercase tracking-widest text-champagneGold font-bold font-cinzel flex items-center gap-1.5">
+                        <i data-lucide="home" class="w-3.5 h-3.5"></i> Architectural Type
+                    </label>
+                    <select id="search-type" class="w-full bg-transparent text-sm font-semibold focus:outline-none text-travertineCream cursor-pointer font-cinzel">
+                        <option value="all" class="bg-sanctuaryCard">All Masterpieces</option>
+                        <option value="Penthouse" class="bg-sanctuaryCard">Sky Penthouse</option>
+                        <option value="Waterfront Villa" class="bg-sanctuaryCard">Waterfront Villa</option>
+                        <option value="Desert Sanctuary" class="bg-sanctuaryCard">Desert Sanctuary</option>
+                        <option value="Alpine Chalet" class="bg-sanctuaryCard">Alpine Chalet</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5 p-3.5 rounded-2xl bg-sanctuaryCard border border-sanctuaryBorder">
+                    <label class="text-[10px] uppercase tracking-widest text-champagneGold font-bold font-cinzel flex items-center gap-1.5">
+                        <i data-lucide="wallet" class="w-3.5 h-3.5"></i> Acquisition Scale
+                    </label>
+                    <select id="search-price" class="w-full bg-transparent text-sm font-semibold focus:outline-none text-travertineCream cursor-pointer font-cinzel">
+                        <option value="all" class="bg-sanctuaryCard">Any Valuation</option>
+                        <option value="25m" class="bg-sanctuaryCard">Under $25,000,000</option>
+                        <option value="50m" class="bg-sanctuaryCard">Under $50,000,000</option>
+                        <option value="ultra" class="bg-sanctuaryCard">$50,000,000+</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center">
+                    <button onclick="filterProperties()" class="w-full h-full min-h-[58px] bg-gradient-to-r from-champagneGold via-amber-200 to-amber-400 text-sanctuaryObsidian font-bold font-cinzel tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-lg gold-glow hover:scale-105 transition-all text-sm">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                        <span>EXPLORE SANCTUARY</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="mt-14 flex flex-wrap justify-center gap-10 text-xs text-sageAccent font-cinzel">
+                <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-champagneGold"></i> <strong class="text-travertineCream">$12.4 Billion</strong> Managed Assets</div>
+                <div class="flex items-center gap-2"><i data-lucide="view" class="w-4 h-4 text-champagneGold"></i> <strong class="text-travertineCream">True 360° VR</strong> WebGL Engine</div>
+                <div class="flex items-center gap-2"><i data-lucide="leaf" class="w-4 h-4 text-champagneGold"></i> <strong class="text-travertineCream">LEED Platinum</strong> Biophilic</div>
+            </div>
+        </section>
+
+        <!-- 2. TRUE 360-DEGREE & VR PROPERTY VIEWER SUITE -->
+        <section id="vr-suite" class="max-w-7xl mx-auto px-6 py-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                <div>
+                    <span class="text-champagneGold text-xs uppercase tracking-[0.3em] font-bold font-cinzel block mb-2">Immersive Telemetry</span>
+                    <h2 class="font-cinzel text-3xl sm:text-5xl font-extrabold">360° VR Panoramic Suite</h2>
+                </div>
+                <!-- Room Switcher Tabs -->
+                <div class="mt-6 md:mt-0 flex flex-wrap gap-2.5" id="vr-room-tabs">
+                    <button onclick="switchVRRoom('malibu')" class="vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all bg-champagneGold text-sanctuaryObsidian shadow-lg gold-glow">Malibu Cliffside</button>
+                    <button onclick="switchVRRoom('kyoto')" class="vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Kyoto Zen Bamboo</button>
+                    <button onclick="switchVRRoom('swiss')" class="vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Swiss Alpine Chalet</button>
+                    <button onclick="switchVRRoom('provence')" class="vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Provence Estate</button>
+                </div>
+            </div>
+
+            <!-- VR Interactive Canvas Container -->
+            <div class="relative w-full h-[580px] sm:h-[680px] rounded-3xl overflow-hidden warm-glass border border-champagneGold/40 shadow-2xl group">
+                <div id="vr-canvas-container" class="absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+                
+                <!-- Holographic HUD Overlays -->
+                <div class="absolute top-6 left-6 warm-glass px-6 py-4 rounded-2xl border border-champagneGold/30 pointer-events-none">
+                    <span id="vr-room-title" class="font-cinzel text-base sm:text-lg font-bold text-travertineCream block">Malibu Coastal Sanctuary</span>
+                    <span id="vr-room-subtitle" class="text-xs text-champagneGold font-cinzel flex items-center gap-1.5 mt-1"><i data-lucide="compass" class="w-3.5 h-3.5"></i> Click & Drag to Rotate (360° VR Panorama)</span>
+                </div>
+
+                <div class="absolute top-6 right-6 flex gap-3">
+                    <button onclick="switchVRPanoRoom('living')" id="pano-tab-living" class="px-4 py-2.5 rounded-xl bg-champagneGold text-sanctuaryObsidian text-xs font-bold font-cinzel shadow-lg">Living Pavilion</button>
+                    <button onclick="switchVRPanoRoom('bedroom')" id="pano-tab-bedroom" class="px-4 py-2.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream text-xs font-bold font-cinzel">Master Suite</button>
+                    <button onclick="switchVRPanoRoom('pool')" id="pano-tab-pool" class="px-4 py-2.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream text-xs font-bold font-cinzel">Terrace & Pool</button>
+                    <button onclick="resetVROrientation()" class="px-4 py-2.5 rounded-xl warm-glass hover:border-champagneGold text-champagneGold text-xs font-bold font-cinzel flex items-center gap-1.5"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> RESET</button>
+                </div>
+
+                <!-- Hotspot Bottom Telemetry Bar -->
+                <div class="absolute bottom-8 left-8 right-8 flex flex-col sm:flex-row items-center justify-between gap-4 warm-glass p-5 rounded-2xl border border-champagneGold/30 pointer-events-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-champagneGold/20 flex items-center justify-center text-champagneGold"><i data-lucide="eye" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 id="hotspot-title" class="text-sm font-bold font-cinzel">Travertine Infinity Edge Terrace</h4>
+                            <span id="hotspot-desc" class="text-xs text-sageAccent font-sans">Seamless transition into the Pacific horizon with automated biophilic shading.</span>
+                        </div>
+                    </div>
+                    <button onclick="openInquiryModal('VR Experience Booking')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-champagneGold to-amber-200 text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg gold-glow hover:scale-105 transition-all">
+                        SCHEDULE VR PRIVATE TOUR
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. IMMERSIVE BENTO-GRID PROPERTY GALLERY -->
+        <section id="catalog" class="max-w-7xl mx-auto px-6 py-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                <div>
+                    <span class="text-champagneGold text-xs uppercase tracking-[0.3em] font-bold font-cinzel block mb-2">Curated Portfolio</span>
+                    <h2 class="font-cinzel text-3xl sm:text-5xl font-extrabold">Sanctuary Masterpieces</h2>
+                </div>
+                <!-- Category Pills -->
+                <div class="mt-6 md:mt-0 flex flex-wrap gap-2.5" id="category-pills">
+                    <button onclick="setCategory('all')" class="category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all bg-champagneGold text-sanctuaryObsidian shadow-md">All Sanctuaries</button>
+                    <button onclick="setCategory('Penthouse')" class="category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Penthouses</button>
+                    <button onclick="setCategory('Waterfront Villa')" class="category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Waterfront</button>
+                    <button onclick="setCategory('Desert Sanctuary')" class="category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Desert</button>
+                    <button onclick="setCategory('Alpine Chalet')" class="category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold">Alpine</button>
+                </div>
+            </div>
+
+            <!-- Bento Grid Container -->
+            <div id="property-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 4. 3D ARCHITECTURAL DOLLHOUSE FLOOR PLAN -->
+        <section id="dollhouse" class="max-w-7xl mx-auto px-6 py-16">
+            <div class="warm-glass p-8 sm:p-12 rounded-3xl border border-champagneGold/40 relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-champagneGold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <span class="text-champagneGold text-xs uppercase tracking-[0.3em] font-bold font-cinzel block">BIM Architectural Telemetry</span>
+                        <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold">3D Dollhouse & Floor Plan Switcher</h3>
+                        <p class="text-sageAccent font-light leading-relaxed text-sm font-sans">
+                            Inspect biophilic timber framing, natural airflow ventilation, and exact spatial layouts in real-time. Toggle seamlessly between 2D engineering schematics, 3D isometric dollhouse models, and direct VR walkthroughs.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="setFloorplanView('cad')" id="fp-cad-btn" class="px-6 py-3.5 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg transition-all flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-4 h-4"></i> 2D SCHEMATIC
+                            </button>
+                            <button onclick="setFloorplanView('iso')" id="fp-iso-btn" class="px-6 py-3.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream font-bold font-cinzel text-xs transition-all flex items-center gap-2">
+                                <i data-lucide="box" class="w-4 h-4 text-champagneGold"></i> 3D DOLLHOUSE
+                            </button>
+                            <button onclick="setFloorplanView('vr')" id="fp-vr-btn" class="px-6 py-3.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream font-bold font-cinzel text-xs transition-all flex items-center gap-2">
+                                <i data-lucide="view" class="w-4 h-4 text-champagneGold"></i> 360° VR WALK
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Floorplan Visual Display Box -->
+                    <div class="relative h-[400px] rounded-2xl overflow-hidden warm-glass border border-champagneGold/30 flex items-center justify-center p-4">
+                        <img id="floorplan-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80" alt="Architectural Blueprint" class="w-full h-full object-cover rounded-xl transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-sanctuaryObsidian/90 via-transparent to-transparent flex items-end p-6">
+                            <div class="flex justify-between w-full items-center">
+                                <div>
+                                    <span id="fp-status-label" class="text-xs uppercase text-champagneGold font-bold font-cinzel tracking-wider block">Mode: 2D Engineering Schematic</span>
+                                    <h4 class="text-sm font-bold font-cinzel text-travertineCream">Malibu Coastal Sanctuary Layout</h4>
+                                </div>
+                                <span class="px-3 py-1.5 rounded-lg bg-champagneGold/20 text-champagneGold text-xs font-mono border border-champagneGold/40 font-bold">SCALE 1:50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FINANCIAL INVESTMENT YIELD SIMULATOR -->
+        <section id="yield" class="max-w-7xl mx-auto px-6 py-16">
+            <div class="warm-glass p-8 sm:p-12 rounded-3xl border border-champagneGold/40 relative overflow-hidden">
+                <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-champagneGold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-2xl mb-8">
+                    <span class="text-champagneGold text-xs uppercase tracking-[0.3em] font-bold font-cinzel block mb-2">Wealth Architecture</span>
+                    <h3 class="font-cinzel text-2xl sm:text-4xl font-extrabold">Investment Yield & Mortgage OS</h3>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center text-sm mb-2 font-semibold font-cinzel">
+                                <span class="text-sageAccent">Acquisition Capital</span>
+                                <span id="calc-amount-out" class="text-champagneGold font-mono text-base font-bold">$32,000,000</span>
+                            </div>
+                            <input type="range" id="calc-amount" min="10000000" max="80000000" step="1000000" value="32000000" oninput="calculateMortgage()" class="w-full accent-champagneGold cursor-pointer bg-sanctuaryCard h-2.5 rounded-lg">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center text-sm mb-2 font-semibold font-cinzel">
+                                <span class="text-sageAccent">Private Equity Deposit (30%)</span>
+                                <span id="calc-down-out" class="text-champagneLight font-mono text-base font-bold">$9,600,000</span>
+                            </div>
+                            <input type="range" id="calc-down" min="15" max="50" step="5" value="30" oninput="calculateMortgage()" class="w-full accent-champagneGold cursor-pointer bg-sanctuaryCard h-2.5 rounded-lg">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl bg-sanctuaryCard border border-sanctuaryBorder">
+                                <span class="text-[10px] text-sageAccent uppercase block mb-1 font-cinzel">Projected Annual Yield</span>
+                                <span class="text-base font-mono font-bold text-travertineCream">+16.4% APY</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-sanctuaryCard border border-sanctuaryBorder">
+                                <span class="text-[10px] text-sageAccent uppercase block mb-1 font-cinzel">Amortization Term</span>
+                                <span class="text-base font-mono font-bold text-travertineCream">30 Years Fixed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warm-glass p-8 rounded-2xl border border-champagneGold/40 text-center flex flex-col justify-between space-y-6">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-sageAccent block mb-2 font-cinzel">Estimated Monthly Investment Outlay</span>
+                            <div id="monthly-payment-out" class="font-mono text-4xl sm:text-5xl font-black gold-text-gradient">$107,240</div>
+                            <span class="text-xs text-sageAccent block mt-2 font-cinzel">Includes biophilic concierge & estate maintenance</span>
+                        </div>
+                        <button onclick="openInquiryModal('Sanctuary Wealth Structuring')" class="w-full py-4 rounded-xl bg-gradient-to-r from-champagneGold via-amber-200 to-amber-400 text-sanctuaryObsidian font-bold font-cinzel text-sm shadow-lg gold-glow hover:scale-105 transition-all">
+                            REQUEST PRIVATE WEALTH BRIEFING
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="warm-glass border-t border-sanctuaryBorder mt-20 py-12 px-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg warm-glass-gold flex items-center justify-center border border-champagneGold/40">
+                            <i data-lucide="compass" class="w-4 h-4 text-champagneGold"></i>
+                        </div>
+                        <span class="font-cinzel text-lg font-bold tracking-widest gold-text-gradient">AETHERIA SANCTUARY</span>
+                    </div>
+                    <p class="text-xs text-sageAccent leading-relaxed font-sans">
+                        The definitive organic-luxury spatial living standard for ultra-high-net-worth residential acquisitions and VR panoramic tours worldwide.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-champagneGold font-bold font-cinzel mb-4">Sanctuary Regions</h5>
+                    <ul class="space-y-2 text-xs text-sageAccent font-sans">
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Malibu Coastline, California</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Kyoto Zen Bamboo, Japan</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Swiss Alpine Chalet, Zermatt</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Provence Lavender Estate, France</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-champagneGold font-bold font-cinzel mb-4">Spatial Innovations</h5>
+                    <ul class="space-y-2 text-xs text-sageAccent font-sans">
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">True 360° VR Panoramic Suite</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Biophilic AI Concierge</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">3D BIM Dollhouse CAD</a></li>
+                        <li><a href="#" class="hover:text-champagneGold transition-colors">Encrypted Wealth Escrow</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-champagneGold font-bold font-cinzel mb-4">Confidential Drops</h5>
+                    <p class="text-xs text-sageAccent mb-4 font-sans">Subscribe for confidential off-market sanctuary portfolio drops.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="patron@estate.io" class="bg-sanctuaryCard border border-sanctuaryBorder px-4 py-2.5 rounded-xl text-xs w-full focus:outline-none focus:border-champagneGold text-travertineCream">
+                        <button onclick="showToast('Subscribed to confidential sanctuary drops.')" class="px-4 py-2.5 bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel rounded-xl text-xs">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto pt-8 border-t border-sanctuaryBorder flex flex-col sm:flex-row items-center justify-between text-xs text-sageAccent font-sans">
+                <p>&copy; 2026 AETHERIA SANCTUARY Inc. All rights reserved. Awwwards-Grade 3D Immersive Platform.</p>
+                <div class="flex gap-6 mt-4 sm:mt-0 font-cinzel">
+                    <a href="#" class="hover:text-champagneGold">Privacy Protocol</a>
+                    <a href="#" class="hover:text-champagneGold">Terms of Sanctuary</a>
+                    <a href="#" class="hover:text-champagneGold">Escrow Audits</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- PROPERTY DETAIL & VR MODAL -->
+    <div id="property-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-sanctuaryObsidian/90 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300">
+        <div id="modal-content-box" class="warm-glass w-full max-w-5xl max-h-[90vh] rounded-3xl border border-champagneGold/40 overflow-y-auto shadow-2xl relative transform scale-95 transition-transform duration-300">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+
+    <!-- AI BIOPHILIC CONCIERGE CHAT WIDGET -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <div id="chat-window" class="warm-glass w-80 sm:w-96 rounded-3xl border border-champagneGold/40 shadow-2xl mb-4 hidden flex flex-col h-[480px] overflow-hidden">
+            <div class="p-4 bg-sanctuaryCard border-b border-sanctuaryBorder flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-champagneGold/20 border border-champagneGold/40 flex items-center justify-center text-champagneGold">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold font-cinzel">Aether Sanctuary AI</h4>
+                        <span class="text-[10px] text-champagneGold flex items-center gap-1 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-champagneGold animate-ping"></span> Biophilic Link Active</span>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-sageAccent hover:text-travertineCream p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs font-sans">
+                <div class="flex gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-champagneGold/20 flex-shrink-0 flex items-center justify-center text-champagneGold"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i></div>
+                    <div class="warm-glass p-3 rounded-2xl rounded-tl-none border border-sanctuaryBorder text-travertineCream">
+                        Welcome to Aetheria Sanctuary. How may I assist your exploration of our global real estate portfolio or 360° VR viewing rooms?
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 border-t border-sanctuaryBorder bg-sanctuaryCard flex gap-2">
+                <input type="text" id="chat-input" placeholder="Inquire about Malibu, VR tours, pricing..." onkeypress="if(event.key==='Enter') sendChatMessage()" class="flex-1 bg-sanctuaryObsidian border border-sanctuaryBorder px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-champagneGold text-travertineCream">
+                <button onclick="sendChatMessage()" class="px-4 py-2.5 bg-champagneGold text-sanctuaryObsidian font-bold rounded-xl text-xs"><i data-lucide="send" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+        <button onclick="toggleChat()" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-champagneGold via-amber-200 to-amber-400 text-sanctuaryObsidian shadow-2xl flex items-center justify-center hover:scale-110 gold-glow transition-all">
+            <i data-lucide="message-square" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- BOOKING / INQUIRY MODAL -->
+    <div id="inquiry-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sanctuaryObsidian/90 backdrop-blur-xl hidden">
+        <div class="warm-glass w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-champagneGold/40 relative">
+            <button onclick="closeInquiryModal()" class="absolute top-6 right-6 text-sageAccent hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-6">
+                <span class="text-champagneGold text-xs uppercase tracking-[0.3em] font-bold font-cinzel block mb-1">Private Consultation</span>
+                <h3 class="font-cinzel text-2xl font-bold" id="inquiry-title">Schedule Viewing</h3>
+            </div>
+            <form onsubmit="handleInquirySubmit(event)" class="space-y-4 font-sans">
+                <div>
+                    <label class="text-xs uppercase tracking-wider text-sageAccent font-semibold block mb-1.5 font-cinzel">Patron / Family Office Title</label>
+                    <input type="text" required placeholder="Lord / Lady / Principal Alexander Vance" class="w-full bg-sanctuaryCard border border-sanctuaryBorder px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-champagneGold text-travertineCream">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs uppercase tracking-wider text-sageAccent font-semibold block mb-1.5 font-cinzel">Secure Email</label>
+                        <input type="email" required placeholder="alexander@familyoffice.com" class="w-full bg-sanctuaryCard border border-sanctuaryBorder px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-champagneGold text-travertineCream">
+                    </div>
+                    <div>
+                        <label class="text-xs uppercase tracking-wider text-sageAccent font-semibold block mb-1.5 font-cinzel">Direct Comms</label>
+                        <input type="tel" required placeholder="+41 22 819 9100" class="w-full bg-sanctuaryCard border border-sanctuaryBorder px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-champagneGold text-travertineCream">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs uppercase tracking-wider text-sageAccent font-semibold block mb-1.5 font-cinzel">Preferred Date & VR Slot</label>
+                    <input type="datetime-local" required class="w-full bg-sanctuaryCard border border-sanctuaryBorder px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-champagneGold text-travertineCream">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-champagneGold via-amber-200 to-amber-400 text-sanctuaryObsidian font-bold font-cinzel rounded-xl text-xs shadow-lg gold-glow hover:scale-105 transition-all mt-4">
+                    SUBMIT PRIVATE VIEWING REQUEST
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-24 right-6 z-50 warm-glass border border-champagneGold/40 px-5 py-3 rounded-2xl shadow-2xl transform translate-x-full opacity-0 transition-all duration-300 flex items-center gap-3">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-champagneGold"></i>
+        <span id="toast-msg" class="text-xs font-semibold font-cinzel text-travertineCream">Protocol executed successfully.</span>
+    </div>
+
+    <!-- APPLICATION SCRIPT -->
+    <script>
+        const properties = [
+            {
+                id: 1,
+                title: "Malibu Coastal Cliffside Sanctuary",
+                location: "Malibu Coastline, California",
+                city: "Malibu",
+                type: "Waterfront Villa",
+                price: 42500000,
+                priceFormatted: "$42,500,000",
+                beds: 6,
+                baths: 8,
+                sqft: "10,200 sqft",
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+                tags: ["AI Bio-Climatic", "Infinity Edge", "Private Heliport"],
+                description: "Perched dramatically above Pacific tide. Crafted from warm travertine, rammed earth, and glass with biophilic indoor-outdoor living spaces.",
+                walkScore: 94,
+                sustainability: "LEED Platinum"
+            },
+            {
+                id: 2,
+                title: "Kyoto Zen Bamboo Estate",
+                location: "Kyoto, Japan",
+                city: "Kyoto",
+                type: "Desert Sanctuary",
+                price: 28900000,
+                priceFormatted: "$28,900,000",
+                beds: 5,
+                baths: 6,
+                sqft: "7,800 sqft",
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                tags: ["AI Bio-Climatic", "Zen Tea Pavilion", "Private Onsen"],
+                description: "Surrounded by private sacred bamboo groves. Features traditional Hinoki wood joinery blended with contemporary organic luxury amenities.",
+                walkScore: 89,
+                sustainability: "Zero-Carbon Timber"
+            },
+            {
+                id: 3,
+                title: "Zermatt Alpine Quartz Chalet",
+                location: "Swiss Alps, Zermatt",
+                city: "SwissAlps",
+                type: "Alpine Chalet",
+                price: 36000000,
+                priceFormatted: "$36,000,000",
+                beds: 7,
+                baths: 9,
+                sqft: "11,400 sqft",
+                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                tags: ["Infinity Edge", "Sub-Zero Wine Cellar", "Ski-In/Ski-Out"],
+                description: "Overlooking majestic Matterhorn. Features heated natural stone terraces, geothermal climate controls, and underground vehicle vault.",
+                walkScore: 91,
+                sustainability: "Geothermal Powered"
+            },
+            {
+                id: 4,
+                title: "Provence Lavender Organic Sanctuary",
+                location: "Provence, France",
+                city: "Provence",
+                type: "Penthouse",
+                price: 24500000,
+                priceFormatted: "$24,500,000",
+                beds: 6,
+                baths: 7,
+                sqft: "9,100 sqft",
+                image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+                tags: ["AI Bio-Climatic", "Olive Grove", "Private Heliport"],
+                description: "Restored 18th-century stone bastide set amidst 50 acres of organic lavender fields and ancient olive groves with state-of-the-art subterranean wing.",
+                walkScore: 85,
+                sustainability: "Solar Autonomous"
+            }
+        ];
+
+        let currentCategory = 'all';
+        let wishlist = [];
+
+        // --- THREE.JS VR PANORAMIC VIEWER ---
+        let vrScene, vrCamera, vrRenderer, vrSphere;
+        let isUserInteracting = false, onPointerDownMouseX = 0, onPointerDownMouseY = 0, lon = 0, onPointerDownLon = 0, lat = 0, onPointerDownLat = 0, phi = 0, theta = 0;
+        let currentActiveRoomKey = 'malibu';
+        let currentPanoType = 'living';
+
+        const vrRooms = {
+            malibu: {
+                title: "Malibu Coastal Sanctuary, California",
+                subtitle: "Pacific Ocean Cliffside Horizon",
+                desc: "Travertine infinity edge terrace seamlessly merging with the Pacific tide.",
+                living: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80",
+                bedroom: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80",
+                pool: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=80"
+            },
+            kyoto: {
+                title: "Kyoto Zen Bamboo Pavilion, Japan",
+                subtitle: "Sacred Bamboo Grove Estate",
+                desc: "Hinoki wood craftsmanship surrounded by tranquil meditation gardens.",
+                living: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=80",
+                bedroom: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80",
+                pool: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
+            },
+            swiss: {
+                title: "Swiss Alpine Quartz Chalet, Zermatt",
+                subtitle: "Matterhorn Viewpoint, Switzerland",
+                desc: "Natural stone hearths and heated panoramic outdoor terraces.",
+                living: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80",
+                bedroom: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=80",
+                pool: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=80"
+            },
+            provence: {
+                title: "Provence Lavender Estate, France",
+                subtitle: "Historic Bastide & Olive Groves",
+                desc: "Sun-drenched organic limestone architecture overlooking endless lavender fields.",
+                living: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=80",
+                bedroom: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=80",
+                pool: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80"
+            }
+        };
+
+        function initVRViewer() {
+            const container = document.getElementById('vr-canvas-container');
+            if(!container) return;
+            vrScene = new THREE.Scene();
+            vrCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 1, 1000);
+            
+            vrRenderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            vrRenderer.setSize(container.clientWidth, container.clientHeight);
+            vrRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(vrRenderer.domElement);
+
+            loadVRSphereTexture(currentActiveRoomKey, currentPanoType);
+
+            container.addEventListener('pointerdown', onPointerDown);
+            container.addEventListener('pointermove', onPointerMove);
+            container.addEventListener('pointerup', onPointerUp);
+            container.addEventListener('wheel', onDocumentMouseWheel);
+
+            function animateVR() {
+                requestAnimationFrame(animateVR);
+                lat = Math.max(-85, Math.min(85, lat));
+                phi = THREE.MathUtils.degToRad(90 - lat);
+                theta = THREE.MathUtils.degToRad(lon);
+
+                const target = new THREE.Vector3();
+                target.x = 500 * Math.sin(phi) * Math.cos(theta);
+                target.y = 500 * Math.cos(phi);
+                target.z = 500 * Math.sin(phi) * Math.sin(theta);
+
+                vrCamera.lookAt(target);
+                vrRenderer.render(vrScene, vrCamera);
+            }
+            animateVR();
+
+            window.addEventListener('resize', () => {
+                if(!container) return;
+                vrCamera.aspect = container.clientWidth / container.clientHeight;
+                vrCamera.updateProjectionMatrix();
+                vrRenderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        function loadVRSphereTexture(roomKey, panoType) {
+            if(vrSphere) vrScene.remove(vrSphere);
+            const room = vrRooms[roomKey];
+            const imgUrl = room[panoType] || room.living;
+
+            const loader = new THREE.TextureLoader();
+            loader.setCrossOrigin('anonymous');
+            loader.load(imgUrl, (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                const geometry = new THREE.SphereGeometry(500, 60, 40);
+                geometry.scale(-1, 1, 1);
+                const material = new THREE.MeshBasicMaterial({ map: texture });
+                vrSphere = new THREE.Mesh(geometry, material);
+                vrScene.add(vrSphere);
+                showToast(`Loaded 360° VR Pano: ${room.title} (${panoType.toUpperCase()})`);
+            }, undefined, (err) => {
+                console.warn('Fallback procedural texture loaded', err);
+                loadProceduralFallbackTexture(room);
+            });
+        }
+
+        function loadProceduralFallbackTexture(room) {
+            if(vrSphere) vrScene.remove(vrSphere);
+            const canvas = document.createElement('canvas');
+            canvas.width = 2048; canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#0B0C0E'); grad.addColorStop(0.5, '#141619'); grad.addColorStop(1, '#0B0C0E');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(197, 168, 128, 0.2)'; ctx.lineWidth = 3;
+            for(let i=0; i<canvas.width; i+=128) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let j=0; j<canvas.height; j+=128) { ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(canvas.width,j); ctx.stroke(); }
+
+            ctx.fillStyle = '#EFECE6'; ctx.font = 'bold 44px Cinzel, serif'; ctx.textAlign = 'center';
+            ctx.fillText(room.title.toUpperCase(), canvas.width/2, canvas.height/2 - 30);
+            ctx.fillStyle = '#C5A880'; ctx.font = '22px Plus Jakarta Sans, sans-serif';
+            ctx.fillText("✦ TRUE 360° VR SPHERICAL PANORAMA ✦", canvas.width/2, canvas.height/2 + 25);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            vrSphere = new THREE.Mesh(geometry, material);
+            vrScene.add(vrSphere);
+        }
+
+        function switchVRRoom(roomKey) {
+            currentActiveRoomKey = roomKey;
+            loadVRSphereTexture(roomKey, currentPanoType);
+            const room = vrRooms[roomKey];
+            document.getElementById('vr-room-title').innerText = room.title;
+            document.getElementById('vr-room-subtitle').innerHTML = `<i data-lucide="compass" class="w-3.5 h-3.5"></i> ${room.subtitle}`;
+            document.getElementById('hotspot-title').innerText = room.title + " Telemetry";
+            document.getElementById('hotspot-desc').innerText = room.desc;
+
+            document.querySelectorAll('.vr-tab').forEach(btn => {
+                btn.className = "vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold";
+            });
+            event.target.className = "vr-tab px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all bg-champagneGold text-sanctuaryObsidian shadow-lg gold-glow";
+            lucide.createIcons();
+        }
+
+        function switchVRPanoRoom(panoType) {
+            currentPanoType = panoType;
+            loadVRSphereTexture(currentActiveRoomKey, panoType);
+            ['living', 'bedroom', 'pool'].forEach(t => {
+                const btn = document.getElementById(`pano-tab-${t}`);
+                if(btn) btn.className = "px-4 py-2.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream text-xs font-bold font-cinzel";
+            });
+            const activeBtn = document.getElementById(`pano-tab-${panoType}`);
+            if(activeBtn) activeBtn.className = "px-4 py-2.5 rounded-xl bg-champagneGold text-sanctuaryObsidian text-xs font-bold font-cinzel shadow-lg";
+        }
+
+        function resetVROrientation() {
+            lon = 0; lat = 0;
+            showToast('VR axis orientation reset.');
+        }
+
+        function onPointerDown(event) {
+            isUserInteracting = true;
+            onPointerDownMouseX = event.clientX;
+            onPointerDownMouseY = event.clientY;
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+        }
+
+        function onPointerMove(event) {
+            if (isUserInteracting === true) {
+                lon = (onPointerDownMouseX - event.clientX) * 0.15 + onPointerDownLon;
+                lat = (event.clientY - onPointerDownMouseY) * 0.15 + onPointerDownLat;
+            }
+        }
+
+        function onPointerUp() { isUserInteracting = false; }
+        function onDocumentMouseWheel(event) {
+            vrCamera.fov = Math.max(40, Math.min(85, vrCamera.fov + event.deltaY * 0.05));
+            vrCamera.updateProjectionMatrix();
+        }
+
+        // --- BACKGROUND 3D PARTICLE CRYSTAL TORUS ---
+        function initHeroThreeJS() {
+            const container = document.getElementById('canvas-container');
+            if(!container) return;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const particleCount = 1400;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                const u = Math.random() * Math.PI * 2;
+                const v = Math.random() * Math.PI * 2;
+                const r = 4.5 + Math.random() * 5.5;
+                positions[i] = r * Math.cos(u) * Math.sin(v);
+                positions[i + 1] = r * Math.sin(u) * Math.sin(v);
+                positions[i + 2] = r * Math.cos(v);
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0xC5A880, size: 0.09, transparent: true, opacity: 0.8 });
+            const particleCrystal = new THREE.Points(geometry, material);
+            scene.add(particleCrystal);
+
+            const wireGeo = new THREE.DodecahedronGeometry(6, 1);
+            const wireMat = new THREE.MeshBasicMaterial({ color: 0x7A8B78, wireframe: true, transparent: true, opacity: 0.18 });
+            const dodeca = new THREE.Mesh(wireGeo, wireMat);
+            scene.add(dodeca);
+
+            camera.position.z = 18;
+            let mouseX = 0, mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 0.4;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                particleCrystal.rotation.x += 0.001 + mouseY * 0.2;
+                particleCrystal.rotation.y += 0.0015 + mouseX * 0.2;
+                dodeca.rotation.x -= 0.001;
+                dodeca.rotation.y -= 0.0015;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        window.onload = function() {
+            lucide.createIcons();
+            initHeroThreeJS();
+            initVRViewer();
+            renderProperties();
+        };
+
+        // --- RENDER PROPERTIES ---
+        function renderProperties() {
+            const grid = document.getElementById('property-grid');
+            if(!grid) return;
+            const cityFilter = document.getElementById('search-city').value;
+            const typeFilter = document.getElementById('search-type').value;
+            const priceFilter = document.getElementById('search-price').value;
+
+            const filtered = properties.filter(p => {
+                const matchesCategory = (currentCategory === 'all' || p.type === currentCategory);
+                const matchesCity = (cityFilter === 'all' || p.city === cityFilter);
+                const matchesType = (typeFilter === 'all' || p.type === typeFilter);
+                let matchesPrice = true;
+                if(priceFilter === '25m') matchesPrice = p.price <= 25000000;
+                if(priceFilter === '50m') matchesPrice = p.price <= 50000000;
+                if(priceFilter === 'ultra') matchesPrice = p.price > 50000000;
+                return matchesCategory && matchesCity && matchesType && matchesPrice;
+            });
+
+            grid.innerHTML = filtered.map((p, index) => `
+                <div class="warm-glass rounded-3xl overflow-hidden border border-sanctuaryBorder hover:border-champagneGold transition-all duration-300 group flex flex-col ${index === 0 ? 'md:col-span-2' : ''}">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-sanctuaryObsidian via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute top-4 left-4 flex gap-2">
+                            <span class="px-3 py-1 rounded-xl bg-sanctuaryObsidian/85 backdrop-blur-md text-[10px] font-bold font-cinzel text-champagneGold border border-champagneGold/30 uppercase tracking-wider">${p.type}</span>
+                        </div>
+                        <button onclick="toggleWishlist(${p.id}, event)" class="absolute top-4 right-4 w-9 h-9 rounded-xl warm-glass flex items-center justify-center text-travertineCream hover:text-champagneGold transition-colors">
+                            <i data-lucide="bookmark" class="w-4 h-4 ${wishlist.includes(p.id) ? 'fill-champagneGold text-champagneGold' : ''}"></i>
+                        </button>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                            <div>
+                                <span class="text-xs text-sageAccent flex items-center gap-1 font-sans"><i data-lucide="map-pin" class="w-3 h-3 text-champagneGold"></i> ${p.location}</span>
+                                <h3 class="font-cinzel text-lg font-extrabold text-travertineCream group-hover:text-champagneGold transition-colors">${p.title}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div class="flex flex-wrap gap-1.5 mb-1">
+                            ${p.tags.map(t => `<span class="px-2.5 py-1 rounded-lg bg-sanctuaryCard text-[10px] text-sageAccent font-cinzel border border-sanctuaryBorder">✦ ${t}</span>`).join('')}
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-sageAccent border-b border-sanctuaryBorder pb-3 font-sans">
+                            <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5 text-champagneGold"></i> ${p.beds} Beds</span>
+                            <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5 text-champagneGold"></i> ${p.baths} Baths</span>
+                            <span class="flex items-center gap-1"><i data-lucide="maximize" class="w-3.5 h-3.5 text-champagneGold"></i> ${p.sqft}</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[10px] uppercase text-sageAccent block font-cinzel">Valuation</span>
+                                <span class="font-mono text-lg font-bold text-champagneGold">${p.priceFormatted}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="jumpToVR('${p.city}')" class="px-3 py-2.5 rounded-xl bg-champagneGold/20 text-champagneGold border border-champagneGold/40 hover:bg-champagneGold hover:text-sanctuaryObsidian font-bold font-cinzel text-xs transition-all flex items-center gap-1" title="Launch 360° VR View">
+                                    <i data-lucide="view" class="w-4 h-4"></i> 360° VR
+                                </button>
+                                <button onclick="openPropertyModal(${p.id})" class="px-3 py-2.5 rounded-xl bg-sanctuaryCard hover:bg-champagneGold hover:text-sanctuaryObsidian border border-sanctuaryBorder font-bold font-cinzel text-xs transition-all flex items-center gap-1">
+                                    <span>VIEW</span>
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = "category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all warm-glass text-travertineCream hover:text-champagneGold";
+            });
+            event.target.className = "category-btn px-5 py-2.5 rounded-xl text-xs font-bold font-cinzel tracking-wider transition-all bg-champagneGold text-sanctuaryObsidian shadow-md";
+            renderProperties();
+        }
+
+        function filterProperties() {
+            renderProperties();
+            showToast('Sanctuary portfolio filtered successfully.');
+        }
+
+        function jumpToVR(cityKey) {
+            const mappedKey = vrRooms[cityKey] ? cityKey : 'malibu';
+            switchVRRoom(mappedKey);
+            document.getElementById('vr-suite').scrollIntoView({ behavior: 'smooth' });
+            showToast(`Launched live 360° VR viewer for property.`);
+        }
+
+        // --- 3D DOLLHOUSE FLOOR PLAN SWITCHER ---
+        function setFloorplanView(view) {
+            const img = document.getElementById('floorplan-img');
+            const cadBtn = document.getElementById('fp-cad-btn');
+            const isoBtn = document.getElementById('fp-iso-btn');
+            const vrBtn = document.getElementById('fp-vr-btn');
+            const label = document.getElementById('fp-status-label');
+
+            cadBtn.className = "px-6 py-3.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream font-bold font-cinzel text-xs transition-all flex items-center gap-2";
+            isoBtn.className = "px-6 py-3.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream font-bold font-cinzel text-xs transition-all flex items-center gap-2";
+            vrBtn.className = "px-6 py-3.5 rounded-xl warm-glass hover:border-champagneGold text-travertineCream font-bold font-cinzel text-xs transition-all flex items-center gap-2";
+
+            if(view === 'iso') {
+                img.style.filter = 'sepia(0.3) contrast(1.2) drop-shadow(0 0 20px rgba(197,168,128,0.4))';
+                isoBtn.className = "px-6 py-3.5 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg transition-all flex items-center gap-2";
+                label.innerText = "Mode: 3D Isometric Dollhouse BIM Model";
+                showToast('Switched to 3D Isometric Dollhouse view.');
+            } else if(view === 'vr') {
+                img.style.filter = 'brightness(1.1) saturate(1.3)';
+                vrBtn.className = "px-6 py-3.5 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg transition-all flex items-center gap-2";
+                label.innerText = "Mode: 360° VR Interactive Walkthrough";
+                showToast('Switched to 360° VR Walkthrough mode.');
+            } else {
+                img.style.filter = 'none';
+                cadBtn.className = "px-6 py-3.5 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg transition-all flex items-center gap-2";
+                label.innerText = "Mode: 2D Engineering Schematic";
+                showToast('Switched to 2D CAD Engineering Blueprint.');
+            }
+        }
+
+        // --- FINANCIAL YIELD CALCULATOR ---
+        function calculateMortgage() {
+            const amount = parseInt(document.getElementById('calc-amount').value);
+            const downPct = parseInt(document.getElementById('calc-down').value);
+            
+            document.getElementById('calc-amount-out').innerText = '$' + amount.toLocaleString();
+            document.getElementById('calc-down-out').innerText = '$' + (amount * (downPct / 100)).toLocaleString();
+
+            const principal = amount * (1 - (downPct / 100));
+            const monthlyRate = 0.0525 / 12;
+            const payments = 360;
+            const monthly = (principal * monthlyRate * Math.pow(1 + monthlyRate, payments)) / (Math.pow(1 + monthlyRate, payments) - 1);
+
+            document.getElementById('monthly-payment-out').innerText = '$' + Math.round(monthly).toLocaleString();
+        }
+
+        // --- WISHLIST ---
+        function toggleWishlist(id, e) {
+            e.stopPropagation();
+            const index = wishlist.indexOf(id);
+            if(index > -1) {
+                wishlist.splice(index, 1);
+                showToast('Removed from saved sanctuary portfolio.');
+            } else {
+                wishlist.push(id);
+                showToast('Added to saved sanctuary portfolio.');
+            }
+            const badge = document.getElementById('wishlist-badge');
+            if(wishlist.length > 0) {
+                badge.innerText = wishlist.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+            renderProperties();
+        }
+
+        function openWishlistModal() {
+            if(wishlist.length === 0) {
+                showToast('Your saved sanctuary portfolio is empty.');
+                return;
+            }
+            openPropertyModal(wishlist[0]);
+        }
+
+        // --- PROPERTY DETAIL MODAL WITH VR INTEGRATION ---
+        function openPropertyModal(id) {
+            const p = properties.find(item => item.id === id);
+            if(!p) return;
+
+            const modalBox = document.getElementById('modal-content-box');
+            modalBox.innerHTML = `
+                <div class="relative h-72 sm:h-96 overflow-hidden">
+                    <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-sanctuaryObsidian via-transparent to-transparent"></div>
+                    <button onclick="closePropertyModal()" class="absolute top-6 right-6 w-10 h-10 rounded-xl warm-glass flex items-center justify-center text-travertineCream hover:text-champagneGold transition-colors z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <div class="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                        <div>
+                            <span class="text-champagneGold text-xs uppercase tracking-widest font-bold font-cinzel">${p.location}</span>
+                            <h2 class="font-cinzel text-2xl sm:text-4xl font-black text-travertineCream">${p.title}</h2>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono text-2xl font-bold text-champagneGold">${p.priceFormatted}</span>
+                            <button onclick="openInquiryModal('${p.title}')" class="px-5 py-3 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg gold-glow hover:scale-105 transition-all">ACQUIRE SANCTUARY</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div>
+                                <h3 class="font-cinzel text-xl font-bold mb-2">Architectural Narrative</h3>
+                                <p class="text-travertineCream text-sm leading-relaxed font-light font-sans">${p.description}</p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-xs uppercase tracking-widest text-champagneGold font-bold font-cinzel mb-3">Biophilic & Sustainable Design</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    ${p.tags.map(t => `<span class="px-3 py-1.5 rounded-xl warm-glass border border-champagneGold/30 text-xs text-travertineCream font-cinzel">✦ ${t}</span>`).join('')}
+                                    <span class="px-3 py-1.5 rounded-xl warm-glass border border-champagneGold/30 text-xs text-travertineCream font-cinzel">✦ ${p.sustainability}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="warm-glass p-6 rounded-2xl border border-sanctuaryBorder space-y-4 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-cinzel text-lg font-bold mb-4">Sanctuary Telemetry</h4>
+                                <div class="space-y-3 font-cinzel text-xs">
+                                    <div class="flex justify-between"><span class="text-sageAccent">Walkability Score</span><span class="font-bold text-champagneGold">${p.walkScore}/100</span></div>
+                                    <div class="flex justify-between"><span class="text-sageAccent">Bedrooms / Baths</span><span class="font-bold text-travertineCream">${p.beds} Beds / ${p.baths} Baths</span></div>
+                                    <div class="flex justify-between"><span class="text-sageAccent">Interior Footprint</span><span class="font-bold text-travertineCream">${p.sqft}</span></div>
+                                </div>
+                            </div>
+                            <button onclick="closePropertyModal(); jumpToVR('${p.city}');" class="w-full py-3.5 rounded-xl bg-champagneGold text-sanctuaryObsidian font-bold font-cinzel text-xs shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="view" class="w-4 h-4"></i> LAUNCH 360° VR SUITE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('property-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('modal-content-box').classList.remove('scale-95');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closePropertyModal() {
+            const modal = document.getElementById('property-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('modal-content-box').classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        // --- AI CONCIERGE CHAT WIDGET ---
+        function toggleChat() {
+            document.getElementById('chat-window').classList.toggle('hidden');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML += `
+                <div class="flex gap-2 justify-end">
+                    <div class="warm-glass p-3 rounded-2xl rounded-tr-none border border-champagneGold/30 text-travertineCream max-w-[80%]">${msg}</div>
+                </div>
+            `;
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                let reply = "Your inquiry has been logged with our private family office advisors. Would you like to schedule an immersive 360° VR tour?";
+                const lower = msg.toLowerCase();
+                if(lower.includes('malibu') || lower.includes('coast')) {
+                    reply = "The Malibu Coastal Cliffside Sanctuary features travertine infinity terraces and Pacific ocean views at $42.5M. Shall I launch the 360° VR suite for you?";
+                } else if(lower.includes('price') || lower.includes('yield') || lower.includes('cost')) {
+                    reply = "Our global luxury properties deliver an average +16.4% APY. Use our Investment Yield Simulator above to calculate precise schedules.";
+                }
+
+                chatMessages.innerHTML += `
+                    <div class="flex gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-champagneGold/20 flex-shrink-0 flex items-center justify-center text-champagneGold"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i></div>
+                        <div class="warm-glass p-3 rounded-2xl rounded-tl-none border border-sanctuaryBorder text-travertineCream max-w-[80%]">${reply}</div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                lucide.createIcons();
+            }, 1000);
+        }
+
+        // --- INQUIRY MODAL & CONFETTI ---
+        function openInquiryModal(title) {
+            document.getElementById('inquiry-title').innerText = `Private Consultation: ${title}`;
+            document.getElementById('inquiry-modal').classList.remove('hidden');
+        }
+
+        function closeInquiryModal() {
+            document.getElementById('inquiry-modal').classList.add('hidden');
+        }
+
+        function handleInquirySubmit(e) {
+            e.preventDefault();
+            closeInquiryModal();
+            closePropertyModal();
+
+            confetti({
+                particleCount: 160,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#C5A880', '#E8D4B4', '#7A8B78', '#EFECE6']
+            });
+
+            showToast('Private viewing consultation transmitted successfully.');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
